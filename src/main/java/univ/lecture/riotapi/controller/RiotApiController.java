@@ -134,6 +134,8 @@ public class RiotApiController {
       int teamId = (Integer)summonerDetail.get("teamId");
       int now = (Integer)summonerDetail.get("now");
       double result = (double)summonerDetail.get("result");
+      summonerDetail=(Map<String,Object>)parsedMap.values().toArray()[0];
+      parsedMap = new JacksonJsonParser().parseMap(request);
       
       
       
