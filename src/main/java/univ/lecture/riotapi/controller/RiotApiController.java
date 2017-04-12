@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import univ.lecture.riotapi.Calculator;
 import univ.lecture.riotapi.model.Summoner;
 
@@ -56,22 +58,75 @@ public class RiotApiController {
 //        return summoner;
 //    }
     
-    @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public @ResponseBody Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
-        final String url = riotApiEndpoint;
-
-        Calculator cal = new Calculator();
-
-        Date dt = new Date();
-        
-        int teamId = 7;
-        long now = dt.getTime();
-        double result = cal.calculate(equation);
-        
-        Summoner summoner = new Summoner(teamId, now, result);
-
-        return summoner;
+//    @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//    public @ResponseBody Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
+//        final String url = riotApiEndpoint;
+//
+//        Calculator cal = new Calculator();
+//
+//        Date dt = new Date();
+//        
+//        int teamId = 7;
+//        long now = dt.getTime();
+//        double result = cal.calculate(equation);
+//        
+//        Summoner summoner = new Summoner(teamId, now, result);
+//
+//        return summoner;
+//    }
+    
+    Calculator cal = new Calculator();
+    
+    class Data{
+    	private int teamId = 7;
+    	private long now = System.currentTimeMillis();
+    	private double result;
+    	
+    	public int getTeamId(){
+    		return teamId;
+    	}
+    	
+    	public long getNow(){
+    		return now;
+    	}
+    	
+    	public double getResult(){
+    		return result;
+    	}
+    	
+    	public void setResult(String exp){
+    		this.result = cal.calculate(exp);
+    	}
+    	
     }
+    
+  @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  public @ResponseBody Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
+      final String url = riotApiEndpoint;
+      
+      Data d = new Data();
+      d.setResult(equation);
+      
+      ObjectMapper mapper = new ObjectMapper();
+      
+      String request = mapper.writeValueAsString(d);
+      //Data 객체를 JSON으로 파싱하는 부분
+      
+      String response = restTemplate.postForObject(url, request, String.class);
+      Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);
+      
+
+      Map<String, Object> summonerDetail = (Map<String, Object>) parsedMap.values().toArray()[0];
+      int teamId = (Integer)summonerDetail.get("teamId");
+      int now = (Integer)summonerDetail.get("now");
+      double result = (double)summonerDetail.get("result");
+      
+      
+      
+      Summoner summoner = new Summoner(teamId, now, result);
+
+      return summoner;
+  }
 
     
 }
