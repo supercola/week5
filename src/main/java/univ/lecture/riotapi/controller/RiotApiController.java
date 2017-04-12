@@ -59,23 +59,6 @@ public class RiotApiController {
 //        return summoner;
 //    }
     
-//    @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public @ResponseBody Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
-//        final String url = riotApiEndpoint;
-//
-//        Calculator cal = new Calculator();
-//
-//        Date dt = new Date();
-//        
-//        int teamId = 7;
-//        long now = dt.getTime();
-//        double result = cal.calculate(equation);
-//        
-//        Summoner summoner = new Summoner(teamId, now, result);
-//
-//        return summoner;
-//    }
-    
 //    Calculator cal = new Calculator();
 //    
 //    class Data{
@@ -134,8 +117,8 @@ public class RiotApiController {
       int teamId = (Integer)summonerDetail.get("teamId");
       int now = (Integer)summonerDetail.get("now");
       double result = (double)summonerDetail.get("result");
-      summonerDetail=(Map<String,Object>)parsedMap.values().toArray()[0];
-      parsedMap = new JacksonJsonParser().parseMap(request);
+//      summonerDetail=(Map<String,Object>)parsedMap.values().toArray()[0];
+//      parsedMap = new JacksonJsonParser().parseMap(request);
       
       
       
