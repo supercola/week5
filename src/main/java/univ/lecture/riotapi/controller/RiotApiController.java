@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import univ.lecture.riotapi.Calculator;
 import univ.lecture.riotapi.model.Summoner;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Map;
@@ -75,42 +76,55 @@ public class RiotApiController {
 //        return summoner;
 //    }
     
-    Calculator cal = new Calculator();
-    
-    class Data{
-    	private int teamId = 7;
-    	private long now = System.currentTimeMillis();
-    	private double result;
-    	
-    	public int getTeamId(){
-    		return teamId;
-    	}
-    	
-    	public long getNow(){
-    		return now;
-    	}
-    	
-    	public double getResult(){
-    		return result;
-    	}
-    	
-    	public void setResult(String exp){
-    		this.result = cal.calculate(exp);
-    	}
-    	
-    }
+//    Calculator cal = new Calculator();
+//    
+//    class Data{
+//    	private int teamId = 7;
+//    	private long now = System.currentTimeMillis();
+//    	private double result;
+//    	
+//    	public int getTeamId(){
+//    		return teamId;
+//    	}
+//    	
+//    	public long getNow(){
+//    		return now;
+//    	}
+//    	
+//    	public double getResult(){
+//    		return result;
+//    	}
+//    	
+//    	public void setResult(String exp){
+//    		this.result = cal.calculate(exp);
+//    	}
+//    	
+//    }
     
   @RequestMapping(value = "/calc/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
   public @ResponseBody Summoner querySummoner(@RequestBody String equation) throws UnsupportedEncodingException {
       final String url = riotApiEndpoint;
       
-      Data d = new Data();
-      d.setResult(equation);
+//      Data d = new Data();
+//      d.setResult(equation);
+//      
+//      ObjectMapper mapper = new ObjectMapper();
       
-      ObjectMapper mapper = new ObjectMapper();
+//      try{
+//    	  String request = mapper.writeValueAsString(d);
+//          //Data 객체를 JSON으로 파싱하는 부분  
+//      }catch(IOException e){
+//    	  System.out.println("pasing error!");
+//      }
       
-      String request = mapper.writeValueAsString(d);
-      //Data 객체를 JSON으로 파싱하는 부분
+      Calculator cal = new Calculator();
+      
+	    String request = "{"
+	    + "\"teamId\":\"7\","
+	    + "\"now\":"+System.currentTimeMillis()
+	    + "\"cal\":"+cal.calculate(equation)
+	    + "}";
+
       
       String response = restTemplate.postForObject(url, request, String.class);
       Map<String, Object> parsedMap = new JacksonJsonParser().parseMap(response);

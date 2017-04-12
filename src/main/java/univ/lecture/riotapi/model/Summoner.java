@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Summoner {
 	private int teamId;
-    private long now;
+    private int now;
     private double result;
 }
